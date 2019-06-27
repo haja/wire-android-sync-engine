@@ -7,15 +7,15 @@ import sbt._
 import sbtassembly.MappingSet
 import SharedSettings._
 
-val MajorVersion = "129"
-val MinorVersion = "3" // hotfix release
+val MajorVersion = "130"
+val MinorVersion = "0" // hotfix release
 
 version in ThisBuild := {
   val jobName = sys.env.get("JOB_NAME")
   val isPR = sys.env.get("PR").fold(false)(_.toBoolean)
   //val buildNumber = sys.env.get("BUILD_NUMBER")
   // TODO hardcoding build number here
-  val buildNumber = Some("2153")
+  val buildNumber = Some("1")
   val master = jobName.exists(_.endsWith("-master"))
   val buildNumberString = buildNumber.fold("-SNAPSHOT")("." + _)
   if (master) MajorVersion + "." + MinorVersion + buildNumberString
