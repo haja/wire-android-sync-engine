@@ -32,8 +32,8 @@ object BackendConfig {
   val StagingFirebaseOptions = FirebaseOptions("723990470614", "1:723990470614:android:9a1527f79aa62284", "AIzaSyAGCoJGUtDBLJJiQPLxHQRrdkbyI0wlbo8")
   val ProdFirebaseOptions    = FirebaseOptions("782078216207", "1:782078216207:android:d3db2443512d2055", "AIzaSyBdYVv2f-Y7JJmHVmDNCKgWvX6Isa8rAGA")
 
-  val StagingBackend = BackendConfig(URI.parse("https://staging-nginz-https.zinfra.io"), "https://staging-nginz-ssl.zinfra.io/await", StagingFirebaseOptions, "staging")
-  val ProdBackend    = BackendConfig(URI.parse("https://prod-nginz-https.wire.com"),     "https://prod-nginz-ssl.wire.com/await",     ProdFirebaseOptions,    "prod")
+  val StagingBackend = BackendConfig(URI.parse("http://10.0.2.2:8080"), "http://10.0.2.2:8080/await", StagingFirebaseOptions, "staging")
+  val ProdBackend    = BackendConfig(URI.parse("http://10.0.2.2:8080"), "http://10.0.2.2:8080/await", ProdFirebaseOptions,    "prod")
 
   lazy val byName = Seq(StagingBackend, ProdBackend).map(b => b.environment -> b).toMap
 
