@@ -90,7 +90,7 @@ class PushTokenService(userId:       UserId,
 
 trait GlobalTokenService {
   def currentToken: Signal[Option[PushToken]]
-  def resetGlobalToken(toRemove: Vector[PushToken] = Vector.empty): Future[Unit]
+  def resetGlobalToken(toRemove: Vector[String] = Vector.empty): Future[Unit]
   def setNewToken(): Future[Unit]
 }
 
@@ -117,10 +117,10 @@ class GlobalTokenServiceImpl(googleApi: GoogleApi,
   } if (play && current.isEmpty && network != NetworkMode.OFFLINE) setNewToken()
 
   //Specify empty to force remove all tokens, or else only remove if `toRemove` contains the current token.
-  override def resetGlobalToken(toRemove: Vector[PushToken] = Vector.empty) = {
+  override def resetGlobalToken(toRemove: Vector[String] = Vector.empty) = {
     verbose("resetGlobalToken")
     _currentToken().flatMap {
-      case Some(t) if toRemove.contains(t) || toRemove.isEmpty =>
+      case Some(t) if toRemove.contains(t.token) || toRemove.isEmpty =>
         if (deletingToken.isCompleted) {
           deletingToken = for {
             _ <- retry({

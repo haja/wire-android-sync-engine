@@ -87,7 +87,7 @@ object AccountData {
     val TeamId         = opt(id[TeamId]('team_id)).apply(_.teamId)
     val Cookie         = text[Cookie]('cookie, _.str, AuthenticationManager.Cookie)(_.cookie)
     val Token          = opt(text[AccessToken]('access_token, JsonEncoder.encodeString[AccessToken], JsonDecoder.decode[AccessToken]))(_.accessToken)
-    val RegisteredPush = opt(id[PushToken]('registered_push))(_.pushToken)
+    val RegisteredPush = opt(text[PushToken]('registered_push, JsonEncoder.encodeString[PushToken], JsonDecoder.decode[PushToken]))(_.pushToken)
 
     override val idCol = Id
     override val table = Table("ActiveAccounts", Id, TeamId, Cookie, Token, RegisteredPush)
@@ -305,7 +305,7 @@ object AccountDataOld {
     val Email = opt(emailAddress('email))(_.email)
     val Phone = opt(phoneNumber('phone))(_.phone)
     val Handle = opt(handle('handle))(_.handle)
-    val RegisteredPush = opt(id[PushToken]('registered_push))(_.registeredPush)
+    val RegisteredPush = None
     val PendingEmail = opt(emailAddress('pending_email))(_.pendingEmail)
     val PendingPhone = opt(phoneNumber('pending_phone))(_.pendingPhone)
     val Cookie = opt(text[Cookie]('cookie, _.str, AuthenticationManager.Cookie))(_.cookie)
@@ -322,9 +322,9 @@ object AccountDataOld {
     val CopyPermissions = long('copy_permissions)(_._copyPermissions)
 
     override val idCol = Id
-    override val table = Table("Accounts", Id, Team, Email, PendingEmail, PendingPhone, PendingTeamName, Cookie, Phone, Token, UserId, ClientId, ClientRegState, Handle, PrivateMode, RegWaiting, RegisteredPush, Code, Name, FirstLogin, SelfPermissions, CopyPermissions)
+    override val table = Table("Accounts", Id, Team, Email, PendingEmail, PendingPhone, PendingTeamName, Cookie, Phone, Token, UserId, ClientId, ClientRegState, Handle, PrivateMode, RegWaiting, Code, Name, FirstLogin, SelfPermissions, CopyPermissions)
 
-    override def apply(implicit cursor: DBCursor): AccountDataOld = AccountDataOld(Id, Team, PendingTeamName, Email, Phone, Handle, RegisteredPush, PendingEmail, PendingPhone, Cookie, None, Token, UserId, ClientId, ClientRegState, PrivateMode, RegWaiting, Code, Name, FirstLogin, SelfPermissions, CopyPermissions)
+    override def apply(implicit cursor: DBCursor): AccountDataOld = AccountDataOld(Id, Team, PendingTeamName, Email, Phone, Handle, None, PendingEmail, PendingPhone, Cookie, None, Token, UserId, ClientId, ClientRegState, PrivateMode, RegWaiting, Code, Name, FirstLogin, SelfPermissions, CopyPermissions)
 
     def findByEmail(email: EmailAddress)(implicit db: DB) =
       iterating(db.query(table.name, null, s"${Email.name} = ? OR ${PendingEmail.name} = ?", Array(email.str, email.str), null, null, null))

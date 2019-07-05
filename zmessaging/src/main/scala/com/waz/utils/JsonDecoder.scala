@@ -173,7 +173,7 @@ object JsonDecoder {
   implicit def decodeOptHandle(s: Symbol)(implicit js: JSONObject): Option[Handle] = opt(s, js => Handle(js.getString(s.name)))
   implicit def decodeHandleSeq(s: Symbol)(implicit js: JSONObject): Seq[Handle] = array[Handle](s)({ (arr, i) => Handle(arr.getString(i)) })
 
-  implicit def decodePushToken(s: Symbol)(implicit js: JSONObject): PushToken = PushToken(js.getString(s.name))
+  implicit def decodePushToken()(implicit js: JSONObject): PushToken = PushToken.Decoder(js)
 
   implicit def decodeUidSeq(s: Symbol)(implicit js: JSONObject): Seq[Uid] = array[Uid](s)({ (arr, i) => Uid(arr.getString(i)) })
   implicit def decodeUserIdSeq(s: Symbol)(implicit js: JSONObject): Seq[UserId] = array[UserId](s)({ (arr, i) => UserId(arr.getString(i)) })

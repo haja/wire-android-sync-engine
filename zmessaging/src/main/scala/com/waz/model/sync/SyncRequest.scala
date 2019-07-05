@@ -92,9 +92,9 @@ object SyncRequest {
     override def merge(req: SyncRequest) = mergeHelper[PostSelf](req)(Merged(_))
   }
 
-  case class RegisterPushToken(token: PushToken) extends BaseRequest(Cmd.RegisterPushToken) {
+  case class RegisterPushToken(pushToken: PushToken) extends BaseRequest(Cmd.RegisterPushToken) {
     override def merge(req: SyncRequest) = mergeHelper[RegisterPushToken](req) { r =>
-      Merged(this.copy(token = r.token))
+      Merged(this.copy(pushToken = r.pushToken))
     }
   }
 
@@ -343,7 +343,7 @@ object SyncRequest {
           case Cmd.PostConvJoin          => PostConvJoin(convId, users)
           case Cmd.PostConvLeave         => PostConvLeave(convId, userId)
           case Cmd.PostConnection        => PostConnection(userId, 'name, 'message)
-          case Cmd.DeletePushToken       => DeletePushToken(decodeId[PushToken]('token))
+          case Cmd.DeletePushToken       => DeletePushToken(decodePushToken())
           case Cmd.SyncRichMedia         => SyncRichMedia(messageId)
           case Cmd.SyncSelf              => SyncSelf
           case Cmd.DeleteAccount         => DeleteAccount
@@ -352,7 +352,7 @@ object SyncRequest {
           case Cmd.SyncTeamMember        => SyncTeamMember(userId)
           case Cmd.SyncConnectedUsers    => SyncConnectedUsers
           case Cmd.SyncConnections       => SyncConnections
-          case Cmd.RegisterPushToken     => RegisterPushToken(decodeId[PushToken]('token))
+          case Cmd.RegisterPushToken     => RegisterPushToken(decodePushToken())
           case Cmd.PostSelf              => PostSelf(JsonDecoder[UserInfo]('user))
           case Cmd.PostAddressBook       => PostAddressBook(JsonDecoder.opt[AddressBook]('addressBook).getOrElse(AddressBook.Empty))
           case Cmd.SyncSelfClients       => SyncSelfClients
@@ -406,8 +406,11 @@ object SyncRequest {
           o.put("botId", botId.str)
         case ExactMatchHandle(handle)         => o.put("handle", handle.string)
         case SyncTeamMember(userId)           => o.put("user", userId.str)
-        case DeletePushToken(token)           => putId("token", token)
-        case RegisterPushToken(token)         => putId("token", token)
+        case DeletePushToken(token)           => o.put("token", token.token)
+        case RegisterPushToken(pushReq)         =>
+          o.put("token", pushReq.token)
+          o.put("relayUrl", pushReq.relayUrl)
+          o.put("relayCert", pushReq.relayCert)
         case SyncRichMedia(messageId)         => putId("message", messageId)
         case PostSelfPicture(assetId)         => assetId.foreach(putId("asset", _))
         case PostSelfName(name)               => o.put("name", name)

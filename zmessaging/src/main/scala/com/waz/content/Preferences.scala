@@ -148,6 +148,8 @@ object Preferences {
       implicit lazy val PhoneNumberCodec = apply[PhoneNumber](_.str, PhoneNumber(_), PhoneNumber(""))
 
       implicit lazy val UserInfoCodec = apply[UserInfo](JsonEncoder.encode(_).toString, JsonDecoder.decode[UserInfo], null.asInstanceOf[UserInfo])
+
+      implicit lazy val PushTokenCodec = apply[PushToken](JsonEncoder.encode(_).toString, JsonDecoder.decode[PushToken], null.asInstanceOf[PushToken])
     }
   }
 

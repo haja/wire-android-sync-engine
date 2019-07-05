@@ -45,6 +45,6 @@ class PushTokenSyncHandler(pushTokenService: PushTokenService, backend: BackendC
 
   def deleteGcmToken(token: PushToken): CancellableFuture[SyncResult] = {
     debug(s"deleteGcmToken($token)")
-    client.deletePushToken(token.str) map { _.fold(SyncResult(_), _ => SyncResult.Success) }
+    client.deletePushToken(token.token) map { _.fold(SyncResult(_), _ => SyncResult.Success) }
   }
 }

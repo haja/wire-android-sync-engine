@@ -76,7 +76,7 @@ case class OtrClientRemoveEvent(client: ClientId) extends OtrClientEvent
 
 case class ContactJoinEvent(user: UserId, name: String) extends Event
 
-case class PushTokenRemoveEvent(token: PushToken, senderId: String, client: Option[String]) extends Event
+case class PushTokenRemoveEvent(token: String, senderId: String, client: Option[String]) extends Event
 
 sealed trait ConversationEvent extends RConvEvent {
   val time: RemoteInstant

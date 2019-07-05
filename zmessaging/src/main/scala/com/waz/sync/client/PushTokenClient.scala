@@ -66,12 +66,12 @@ object PushTokenClient {
     implicit lazy val Decoder: JsonDecoder[PushTokenRegistration] = new JsonDecoder[PushTokenRegistration] {
       import com.waz.utils.JsonDecoder._
       override def apply(implicit js: JSONObject): PushTokenRegistration =
-        PushTokenRegistration('token, 'app, decodeId[ClientId]('client), 'transport)
+        PushTokenRegistration(PushToken.Decoder('token), 'app, decodeId[ClientId]('client), 'transport)
     }
 
     implicit lazy val Encoder: JsonEncoder[PushTokenRegistration] = new JsonEncoder[PushTokenRegistration] {
       override def apply(v: PushTokenRegistration): JSONObject = JsonEncoder { o =>
-        o.put("token", v.token)
+        o.put("token", PushToken.Encoder(v.token))
         o.put("app", v.senderId)
         o.put("transport", v.transport)
         o.put("client", v.clientId.str)

@@ -212,16 +212,24 @@ object SyncId {
   }
 }
 
-case class PushToken(str: String) {
-  override def toString: String = str
+case class PushToken(token: String, relayUrl: String, relayCert: String) {
+  // TODO better toString, this may be used for de/encoding?
+  override def toString: String = token
 }
 
 object PushToken {
-  def apply(): PushToken = Id.random()
 
-  implicit object Id extends Id[PushToken] {
-    override def random(): PushToken = PushToken(Uid().toString)
-    override def decode(str: String): PushToken = PushToken(str)
+  implicit lazy val Encoder: JsonEncoder[PushToken] = new JsonEncoder[PushToken] {
+    override def apply(p: PushToken): JSONObject = JsonEncoder { o =>
+      o.put("token", p.token)
+      o.put("relayUrl", p.relayUrl)
+      o.put("relayCert", p.relayCert)
+    }
+  }
+
+  implicit lazy val Decoder: JsonDecoder[PushToken] = new JsonDecoder[PushToken] {
+    import JsonDecoder._
+    override def apply(implicit js: JSONObject): PushToken = PushToken('token, 'relayUrl, 'relayCert)
   }
 }
 
