@@ -35,9 +35,10 @@ object BackendConfig {
   val StagingBackend = BackendConfig(URI.parse("http://10.0.2.2:8080"), "http://10.0.2.2:8080/await", StagingFirebaseOptions, "staging", "staging")
   val StagingBackendLocal = BackendConfig(URI.parse("http://localhost:8080"), "http://localhost:8080/await", StagingFirebaseOptions, "staging", "local")
   val StagingBackendTrigger = BackendConfig(URI.parse("http://trigger.lan:8080"), "http://trigger.lan:8080/await", StagingFirebaseOptions, "staging", "trigger")
+  val StagingBackendRemoteDocker = BackendConfig(URI.parse("http://remotedocker.lan:8080"), "http://remotedocker.lan:8080/await", StagingFirebaseOptions, "staging", "remotedocker")
   val ProdBackend    = BackendConfig(URI.parse("http://10.0.2.2:8080"), "http://10.0.2.2:8080/await", ProdFirebaseOptions,    "prod", "prod")
 
-  lazy val byName = Seq(StagingBackend, StagingBackendLocal, StagingBackendTrigger, ProdBackend).map(b => b.name -> b).toMap
+  lazy val byName = Seq(StagingBackend, StagingBackendLocal, StagingBackendTrigger, StagingBackendRemoteDocker, ProdBackend).map(b => b.name -> b).toMap
 
   def apply(baseUrl: String): BackendConfig = BackendConfig(URI.parse(baseUrl), "", StagingFirebaseOptions, "", "") // XXX only use for testing!
 
