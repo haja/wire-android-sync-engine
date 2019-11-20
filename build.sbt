@@ -15,7 +15,7 @@ version in ThisBuild := {
   val isPR = sys.env.get("PR").fold(false)(_.toBoolean)
   //val buildNumber = sys.env.get("BUILD_NUMBER")
   // TODO hardcoding build number here
-  val buildNumber = Some("4")
+  val buildNumber = Some("5")
   val master = jobName.exists(_.endsWith("-master"))
   val buildNumberString = buildNumber.fold("-SNAPSHOT")("." + _)
   if (master) MajorVersion + "." + MinorVersion + buildNumberString
